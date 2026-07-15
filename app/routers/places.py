@@ -43,7 +43,7 @@ def get_places(type: Optional[str] = Query(None), db: Session = Depends(get_db))
 # 2. 챗봇 질의응답 (POST /api/chat)
 @router.post("/chat", response_model=schemas.ChatResponse)
 def chat_with_ai(req: schemas.ChatRequest, db: Session = Depends(get_db)):
-    db_places = db.query(models.Place).limit(30).all()
+    db_places = db.query(models.Place).limit(5).all()
     chatbot_context = [
         {"장소명": p.title, "타입코드": p.content_type_id, "주소": p.address, "위치": f"({p.mapx}, {p.mapy})"}
         for p in db_places
@@ -70,7 +70,7 @@ def chat_with_ai(req: schemas.ChatRequest, db: Session = Depends(get_db)):
             messages.append(chat)
         messages.append({"role": "user", "content": req.message})
         
-        response = client.chat.completions.create(model="gpt-4o-mini", messages=messages, temperature=0.3)
+        response = client.chat.completions.create(model="gpt-5-mini", messages=messages, temperature=0.3)
         return {"answer": response.choices[0].message.content + LICENSE_FOOTNOTE}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
