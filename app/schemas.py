@@ -65,6 +65,7 @@ class PlaceResponse(BaseModel):
     id: int
     content_id: str
     content_type_id: int
+    content_type: str
     title: str
     address: str
     mapx: float
