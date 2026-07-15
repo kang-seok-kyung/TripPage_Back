@@ -70,7 +70,7 @@ def chat_with_ai(req: schemas.ChatRequest, db: Session = Depends(get_db)):
             messages.append(chat)
         messages.append({"role": "user", "content": req.message})
         
-        response = client.chat.completions.create(model="gpt-5-mini", messages=messages, temperature=0.3)
+        response = client.chat.completions.create(model="gpt-5-mini", messages=messages)
         return {"answer": response.choices[0].message.content + LICENSE_FOOTNOTE}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
