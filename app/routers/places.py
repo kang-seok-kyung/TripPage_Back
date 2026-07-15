@@ -22,13 +22,6 @@ TYPE_CODE_MAP = {
     "여행코스": 25, "레포츠": 28, "숙박": 32, "쇼핑": 38, "음식점": 39, "맛집": 39
 }
 
-LICENSE_FOOTNOTE = (
-    "\n\n---\n"
-    "이 서비스는 한국관광공사 Tour API(TourAPI 4.0)의 데이터를 활용하였습니다.\n"
-    "출처: 한국관광공사 (https://www.data.go.kr/data/15101578/openapi.do)\n"
-    "라이선스: 공공누리 제3유형"
-)
-
 # ========================================================
 # 1. 관광지/맛집 데이터 조회 (기존 기능 100% 원본 유지!)
 # ========================================================
@@ -59,7 +52,7 @@ def chat_with_ai(req: schemas.ChatRequest, db: Session = Depends(get_db)):
         fallback = f"[개발용 DB 연동 테스트 모드]\n질문: {user_msg}\n\nDB 연동 확인된 상위 10개 데이터:\n"
         for p in db_places:
             fallback += f"- [{p.content_type}] {p.title} (주소: {p.address})\n"
-        return {"answer": fallback + LICENSE_FOOTNOTE}
+        return {"answer": fallback}
 
     # --------------------------------------------------------
     # [OpenAI 정식 구동 모드]
@@ -150,7 +143,7 @@ def chat_with_ai(req: schemas.ChatRequest, db: Session = Depends(get_db)):
             model="gpt-5-mini", 
             messages=messages
         )
-        return {"answer": response.choices[0].message.content + LICENSE_FOOTNOTE}
+        return {"answer": response.choices[0].message.content}
         
     except Exception as e:
         print(f"⚠️ 챗봇 처리 도중 에러 발생: {e}")
@@ -158,4 +151,4 @@ def chat_with_ai(req: schemas.ChatRequest, db: Session = Depends(get_db)):
         fallback_msg = "[안내] 실시간 추천 비서에 일시적인 정체가 발생하여 임시 추천 목록을 제공합니다.\n\n"
         for p in db_places[:4]:
             fallback_msg += f"- [{p.content_type}] {p.title} (주소: {p.address})\n"
-        return {"answer": fallback_msg + LICENSE_FOOTNOTE}
+        return {"answer": fallback_msg}
