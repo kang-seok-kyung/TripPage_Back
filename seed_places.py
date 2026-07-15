@@ -12,6 +12,17 @@ JSON_FILES = [
 ]
 DATA_DIR = os.path.join(os.path.dirname(__file__), "app", "data")
 
+TYPE_MAP = {
+    12: "관광지",
+    14: "문화시설",
+    15: "축제공연행사",
+    25: "여행코스",
+    28: "레포츠",
+    32: "숙박",
+    38: "쇼핑",
+    39: "음식점"
+}
+
 def safe_float(val):
     try: return float(val) if val else 0.0
     except ValueError: return 0.0
@@ -45,6 +56,7 @@ def seed_places():
                     db_items.append(models.Place(
                         content_id=str(item.get("contentid", "")),
                         content_type_id=safe_int(item.get("contenttypeid", 0)),
+                        content_type=TYPE_MAP.get(safe_int(item.get("contenttypeid", 0)), "기타"),
                         title=item.get("title", "이름 없음"),
                         address=item.get("addr1", "") + " " + item.get("addr2", ""),
                         mapx=safe_float(item.get("mapx", 0.0)),

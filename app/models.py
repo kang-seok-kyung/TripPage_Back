@@ -21,6 +21,7 @@ class Place(Base):
     id = Column(Integer, primary_key=True, index=True)
     content_id = Column(String(100), nullable=False)
     content_type_id = Column(Integer, nullable=False)
+    content_type = Column(String, nullable=True)
     title = Column(String(200), nullable=False)
     address = Column(String(300), nullable=False)
     mapx = Column(Float, nullable=False)
