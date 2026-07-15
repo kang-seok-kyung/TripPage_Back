@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "LocalHub API"
-    DEBUG: bool = True
+    DEBUG: bool = False
     DATABASE_URL: str = "sqlite:///./local_hub.db"
     OPENAI_API_KEY: str
 
