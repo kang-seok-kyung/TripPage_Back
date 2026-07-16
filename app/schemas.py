@@ -32,11 +32,12 @@ class PostUpdate(BaseModel):
 class PostResponse(PostBase):
     id: int
     created_at: datetime
+    updated_at: Optional[datetime] = None
 
     model_config = {"from_attributes": True}
 
     # 💡 [옵션 1 적용] DB에 있는 UTC 시간을 완벽한 한국 시간(+09:00) 문자열로 변환하여 출력합니다.
-    @field_validator('created_at', mode='before')
+    @field_validator('created_at','updated_at', mode='before')
     @classmethod
     def convert_to_kst(cls, v):
         if isinstance(v, datetime):

@@ -13,7 +13,7 @@ class Post(Base):
     author = Column(String(50), nullable=False, default="익명")
     password = Column(String(100), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime, onupdate=func.now()) # 팀원 DB 규격 반영
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now()) # 팀원 DB 규격 반영
 
 class Place(Base):
     __tablename__ = "places"
