@@ -1,7 +1,10 @@
 # app/schemas.py
-from pydantic import BaseModel, Field
-from datetime import datetime
+from pydantic import BaseModel, Field, field_validator
+from datetime import datetime, timezone, timedelta
 from typing import List, Any, Optional
+
+# 한국 표준시 (KST, UTC+9) 정의
+KST = timezone(timedelta(hours=9))
 
 # ==========================================
 # 1. 커뮤니티 게시판(Posts) 관련 스키마
@@ -30,8 +33,17 @@ class PostResponse(PostBase):
     id: int
     created_at: datetime
 
-    # SQLAlchemy ORM 객체를 Pydantic 모델로 자동 변환하기 위한 설정 (Pydantic v2)
     model_config = {"from_attributes": True}
+
+    # 💡 [옵션 1 적용] DB에 있는 UTC 시간을 완벽한 한국 시간(+09:00) 문자열로 변환하여 출력합니다.
+    @field_validator('created_at', mode='before')
+    @classmethod
+    def convert_to_kst(cls, v):
+        if isinstance(v, datetime):
+            if v.tzinfo is None:
+                v = v.replace(tzinfo=timezone.utc)
+            return v.astimezone(KST) # 한국 시간대(+09:00) 정보 적용하여 반환
+        return v
 
 # 게시글 목록 조회(GET /api/posts) 시 페이지네이션 응답 구조를 정의합니다.
 class PostListResponse(BaseModel):
