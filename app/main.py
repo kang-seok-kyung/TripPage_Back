@@ -14,9 +14,14 @@ app = FastAPI(
     debug=settings.DEBUG
 )
 
+origins = [
+    "http://localhost:5173",                 # 로컬 개발용
+    "https://trip-page.netlify.app"          # 💡 실제 배포된 Netlify 프론트엔드 주소 추가!
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
